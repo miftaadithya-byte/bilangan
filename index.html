@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MathQuest SMP Kelas 7 - Bilangan Bulat Interaktif</title>
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- MODAL LOGIN IDENTITAS SISWA -->
+<div id="modal-login" class="modal-overlay">
+    <div class="login-card">
+        <span style="font-size: 3.5rem;">🎒</span>
+        <h2>Selamat Datang!</h2>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;">Masukkan identitasmu untuk mengakses MathQuest SMP</p>
+        
+        <form onsubmit="simpanIdentitas(event)">
+            <div class="form-group">
+                <label for="txt-nama">Nama Lengkap Siswa:</label>
+                <input type="text" id="txt-nama" class="form-control" placeholder="Contoh: Budi Santoso" required>
+            </div>
+            <div class="form-group">
+                <label for="txt-absen">Nomor Absen:</label>
+                <input type="number" id="txt-absen" class="form-control" placeholder="Contoh: 08" min="1" max="50" required>
+            </div>
+            <button type="submit" class="btn btn-accent" style="width: 100%; margin-top: 24px;">Mulai Belajar 🚀</button>
+        </form>
+    </div>
+</div>
+
+<!-- SIDEBAR NAVIGATION -->
+<aside class="sidebar" id="sidebar">
+    <div class="brand-section">
+        <span class="brand-icon">🎮</span>
+        <div>
+            <div class="brand-title">MathQuest</div>
+            <div class="brand-subtitle">SMP KELAS VII</div>
+        </div>
+    </div>
+
+    <nav class="nav-menu">
+        <button class="nav-item active" id="nav-dashboard" onclick="switchTab('dashboard')">
+            <span>🏠</span> Dashboard
+        </button>
+        <button class="nav-item" id="nav-materi" onclick="switchTab('materi')">
+            <span>📖</span> Modul Materi
+        </button>
+        <button class="nav-item" id="nav-lkm" onclick="switchTab('lkm')">
+            <span>📝</span> LKM Digital
+        </button>
+        <button class="nav-item" id="nav-latihan" onclick="switchTab('latihan')">
+            <span>🔥</span> Latihan HOTS
+        </button>
+        <button class="nav-item" id="nav-hub-kuis" onclick="switchTab('hub-kuis')">
+            <span>⚡</span> Hub Kuis
+        </button>
+        <button class="nav-item" id="nav-rekap" onclick="aksesRekapGuru()">
+            <span>🔒</span> Rekap Nilai Guru
+        </button>
+    </nav>
+</aside>
+
+<!-- MAIN WRAPPER -->
+<div class="main-wrapper">
+    <header class="top-header">
+        <button class="mobile-toggle" onclick="toggleSidebar()">☰</button>
+        <div style="font-weight: 700; font-size: 1.1rem; color: var(--accent);" id="lbl-page-title">Dashboard Utama</div>
+        <div class="user-profile">
+            <span class="user-avatar">👤</span>
+            <span class="user-details" id="lbl-identitas-header">Siswa: - (No. -)</span>
+        </div>
+    </header>
+
+    <main class="content-area">
+
+        <!-- PREREQUISITE WARNING BANNER -->
+        <div class="prereq-alert" id="prereq-banner">
+            <span class="prereq-alert-icon">⚠️</span>
+            <div>
+                <h4 style="color: var(--accent);">Status Prasyarat Kuis Evaluasi</h4>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">Selesaikan seluruh tahapan berikut untuk membuka akses Kuis Evaluasi:</p>
+                <div class="prereq-list">
+                    <div>1. Login Identitas: <span id="st-login" class="status-badge complete">Selesai ✅</span></div>
+                    <div>2. Pelajari Modul Materi: <span id="st-materi" class="status-badge pending">Belum ❌</span></div>
+                    <div>3. Selesaikan & Kumpulkan LKM Digital: <span id="st-lkm" class="status-badge pending">Belum ❌</span></div>
+                    <div>4. Latihan HOTS (Min. 1 Soal Benar): <span id="st-latihan" class="status-badge pending">Belum ❌</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW 1: DASHBOARD -->
+        <section id="tab-dashboard" class="view-section" style="display: block;">
+            <div class="section-title">📊 Progress Belajar Kamu</div>
+            <div class="dashboard-grid">
+                <div class="dash-card">
+                    <div class="dash-card-header">
+                        <div>
+                            <h3>Modul Materi</h3>
+                            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">Konsep & Garis Bilangan</p>
+                        </div>
+                        <span class="dash-icon">📖</span>
+                    </div>
+                    <div>
+                        <span id="dash-materi-status" class="status-badge pending">Belum Dibaca</span>
+                        <button class="btn btn-panel" style="width: 100%; margin-top: 12px;" onclick="switchTab('materi')">Pelajari Materi ➡️</button>
+                    </div>
+                </div>
+
+                <div class="dash-card">
+                    <div class="dash-card-header">
+                        <div>
+                            <h3>LKM Digital</h3>
+                            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">Lembar Kerja Peserta Didik</p>
+                        </div>
+                        <span class="dash-icon">📝</span>
+                    </div>
+                    <div>
+                        <span id="dash-lkm-status" class="status-badge pending">Belum Dikerjakan</span>
+                        <button class="btn btn-panel" style="width: 100%; margin-top: 12px;" onclick="switchTab('lkm')">Isi LKM Digital ➡️</button>
+                    </div>
+                </div>
+
+                <div class="dash-card">
+                    <div class="dash-card-header">
+                        <div>
+                            <h3>Latihan HOTS</h3>
+                            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">Penalaran Unlimited</p>
+                        </div>
+                        <span class="dash-icon">🔥</span>
+                    </div>
+                    <div>
+                        <span id="dash-latihan-status" class="status-badge pending">Belum Cukup</span>
+                        <button class="btn btn-panel" style="width: 100%; margin-top: 12px;" onclick="switchTab('latihan')">Mulai Latihan ➡️</button>
+                    </div>
+                </div>
+
+                <div class="dash-card">
+                    <div class="dash-card-header">
+                        <div>
+                            <h3>Akses Kuis</h3>
+                            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">Evaluasi Total</p>
+                        </div>
+                        <span class="dash-icon">⚡</span>
+                    </div>
+                    <div>
+                        <span id="dash-kuis-status" class="status-badge pending">Terkunci 🔒</span>
+                        <button class="btn btn-accent" id="btn-dash-kuis" style="width: 100%; margin-top: 12px;" onclick="switchTab('hub-kuis')" disabled>Buka Menu Kuis 🎯</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 2: MATERI -->
+        <section id="tab-materi" class="view-section" style="display: none;">
+            <div class="lkm-section">
+                <h2>📖 Modul Konsep Arah & Tanda Bilangan Bulat</h2>
+                <br>
+                <div class="lkm-question-box">
+                    <h3 style="color: var(--accent);">📌 Aturan Dasar Garis Bilangan</h3>
+                    <p style="margin-top: 8px; line-height: 1.6;">Dalam garis bilangan, arah gerakan menentukan operasi matematika yang dilakukan:</p>
+                    <ul style="margin-left: 20px; margin-top: 8px;">
+                        <li><strong>⬅️ KE KIRI / ⬇ KE BAWAH:</strong> Pengurangan/Nilai Negatif (-)</li>
+                        <li><strong>➡️ KE KANAN / ⬆ KE ATAS:</strong> Penjumlahan/Nilai Positif (+)</li>
+                    </ul>
+                </div>
+
+                <div class="lkm-question-box">
+                    <h3>🎮 Simulasi Interaktif Garis Bilangan</h3>
+                    <div class="canvas-container">
+                        <canvas id="canvasMateri" width="800" height="180"></canvas>
+                        <div style="color: var(--accent); font-weight: 700; margin-top: 10px;" id="lbl-materi-pos">📍 Posisi Sekarang: 0</div>
+                        <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">💡 Geser maskot 🚀 secara langsung atau gunakan tombol di bawah!</div>
+                        <div style="display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap;">
+                            <button class="btn btn-danger" onclick="langkahMateri(-1)">⬅️ Kiri (-1)</button>
+                            <button class="btn btn-success" onclick="langkahMateri(1)">➡️ Kanan (+1)</button>
+                            <button class="btn btn-panel" onclick="resetMateri()">🔄 Reset (0)</button>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn btn-accent" style="width: 100%;" onclick="tandaiMateriSelesai()">Saya Sudah Memahami Materi Ini 🚀</button>
+            </div>
+        </section>
+
+        <!-- VIEW 3: LKM DIGITAL -->
+        <section id="tab-lkm" class="view-section" style="display: none;">
+            <div class="lkm-section">
+                <div class="lkm-header">
+                    <h2>📝 Lembar Kerja Peserta Didik (LKM Digital)</h2>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">Isi seluruh kegiatan di bawah ini. Sesuai aturan, LKM ini bertujuan untuk belajar dan menemukan konsep—jawaban boleh salah, tetapi wajib dikerjakan dan dikumpulkan untuk melanjutkan ke kuis.</p>
+                </div>
+
+                <!-- KEGIATAN 1 -->
+                <div class="lkm-question-box">
+                    <h4>KEGIATAN 1 — Mengamati Garis Bilangan</h4>
+                    <div class="form-group">
+                        <label>1. Bilangan positif berada di sebelah mana dari 0?</label>
+                        <input type="text" id="lkm-k1-q1" class="form-control" placeholder="Tuliskan jawabanmu...">
+                    </div>
+                    <div class="form-group">
+                        <label>2. Bilangan negatif berada di sebelah mana dari 0?</label>
+                        <input type="text" id="lkm-k1-q2" class="form-control" placeholder="Tuliskan jawabanmu...">
+                    </div>
+                    <div class="form-group">
+                        <label>3. Apa yang terjadi pada nilai bilangan ketika bergerak ke kanan dan ke kiri?</label>
+                        <textarea id="lkm-k1-q3" class="form-control" rows="2" placeholder="Jelaskan perubahan nilainya..."></textarea>
+                    </div>
+                </div>
+
+                <!-- KEGIATAN 2 -->
+                <div class="lkm-question-box">
+                    <h4>KEGIATAN 2 — Menemukan Pola Operasi</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-muted);">Bandingkan dan isi hasil perhitungan berikut:</p>
+                    <table class="lkm-table">
+                        <thead>
+                            <tr>
+                                <th>Pasangan</th>
+                                <th>Operasi A</th>
+                                <th>Hasil A</th>
+                                <th>Operasi B</th>
+                                <th>Hasil B</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td><td>(1 + 1)</td>
+                                <td><input type="text" id="lkm-k2-p1a" class="form-control" style="width: 70px; text-align: center;"></td>
+                                <td>(1 − (−1))</td>
+                                <td><input type="text" id="lkm-k2-p1b" class="form-control" style="width: 70px; text-align: center;"></td>
+                            </tr>
+                            <tr>
+                                <td>2</td><td>(2 + 3)</td>
+                                <td><input type="text" id="lkm-k2-p2a" class="form-control" style="width: 70px; text-align: center;"></td>
+                                <td>(2 − (−3))</td>
+                                <td><input type="text" id="lkm-k2-p2b" class="form-control" style="width: 70px; text-align: center;"></td>
+                            </tr>
+                            <tr>
+                                <td>3</td><td>(1 − 1)</td>
+                                <td><input type="text" id="lkm-k2-p3a" class="form-control" style="width: 70px; text-align: center;"></td>
+                                <td>(1 + (−1))</td>
+                                <td><input type="text" id="lkm-k2-p3b" class="form-control" style="width: 70px; text-align: center;"></td>
+                            </tr>
+                            <tr>
+                                <td>4</td><td>(5 − 3)</td>
+                                <td><input type="text" id="lkm-k2-p4a" class="form-control" style="width: 70px; text-align: center;"></td>
+                                <td>(5 + (−3))</td>
+                                <td><input type="text" id="lkm-k2-p4b" class="form-control" style="width: 70px; text-align: center;"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="form-group">
+                        <label>a. Apa pola hubungan hasil pada pasangan 1–2?</label>
+                        <textarea id="lkm-k2-pola1" class="form-control" rows="2"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>b. Apa pola hubungan hasil pada pasangan 3–4?</label>
+                        <textarea id="lkm-k2-pola2" class="form-control" rows="2"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>c. Lengkapi aturan simbolik:</label>
+                        <div style="display: flex; gap: 10px; align-items: center; margin-top: 6px; flex-wrap: wrap;">
+                            a − (−b) = <input type="text" id="lkm-k2-rule1" class="form-control" style="width: 120px;" placeholder="...">
+                            ; a + (−b) = <input type="text" id="lkm-k2-rule2" class="form-control" style="width: 120px;" placeholder="...">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- KEGIATAN 3 -->
+                <div class="lkm-question-box">
+                    <h4>KEGIATAN 3 — Menguji Pola & Masalah Kontekstual</h4>
+                    <div class="form-group">
+                        <label>1. 7 − (−2) =</label>
+                        <input type="text" id="lkm-k3-q1" class="form-control" style="width: 120px;">
+                    </div>
+                    <div class="form-group">
+                        <label>2. −3 − (−4) =</label>
+                        <input type="text" id="lkm-k3-q2" class="form-control" style="width: 120px;">
+                    </div>
+                    <div class="form-group">
+                        <label>3. 8 + (−5) =</label>
+                        <input type="text" id="lkm-k3-q3" class="form-control" style="width: 120px;">
+                    </div>
+                    <div class="form-group">
+                        <label>4. −2 + (−3) =</label>
+                        <input type="text" id="lkm-k3-q4" class="form-control" style="width: 120px;">
+                    </div>
+
+                    <hr style="border-color: var(--border-color); margin: 16px 0;">
+                    <p style="font-weight: 700; color: var(--accent);">Soal Kontekstual Suhu Daging:</p>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">Suhu daging mula-mula (-5°C), naik (9°C), lalu turun (3°C). Tentukan suhu akhirnya.</p>
+                    <div class="form-group">
+                        <label>Operasi Matematika:</label>
+                        <input type="text" id="lkm-k3-ops" class="form-control" placeholder="Contoh: -5 + 9 - 3">
+                    </div>
+                    <div class="form-group">
+                        <label>Suhu Akhir (°C):</label>
+                        <input type="text" id="lkm-k3-suhu" class="form-control" style="width: 120px;">
+                    </div>
+                    <div class="form-group">
+                        <label>Refleksi: Apa pola yang kamu temukan dan bagaimana MathQuest membantumu?</label>
+                        <textarea id="lkm-k3-refleksi" class="form-control" rows="2" placeholder="Tuliskan refleksi belajarmu di sini..."></textarea>
+                    </div>
+
+                    <div class="rubrik-box">
+                        📌 <strong>Ketentuan LKM:</strong> Jawaban Anda boleh benar atau salah. Selama seluruh isian di atas telah terisi dengan niat menjawab, LKM dapat dikumpulkan dan guru dapat meninjau rekapitulasi jawaban Anda.
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 12px; margin-top: 20px; flex-wrap: wrap;">
+                    <button class="btn btn-panel" onclick="simpanDraftLKM()">💾 Simpan Draft Jawaban</button>
+                    <button class="btn btn-accent" style="flex-grow: 1;" onclick="kumpulkanLKM()">🎯 Kumpulkan LKM Digital</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 4: LATIHAN HOTS -->
+        <section id="tab-latihan" class="view-section" style="display: none;">
+            <div class="lkm-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                    <h2>🔥 Latihan HOTS Interaktif</h2>
+                    <span class="status-badge progress">Unlimited Practice</span>
+                </div>
+
+                <div style="margin-top: 20px;">
+                    <div id="lbl-latihan-soal" style="font-size: 1.1rem; font-weight: 700; color: var(--accent); margin-bottom: 16px;">Memuat Soal Latihan...</div>
+
+                    <div class="form-group" style="max-width: 250px;">
+                        <label>Jawaban Angka Kamu:</label>
+                        <input type="number" id="input-angka-latihan" class="form-control" placeholder="Contoh: 1" style="font-weight: 700; text-align: center;">
+                    </div>
+
+                    <div class="canvas-container">
+                        <canvas id="canvasLatihan" width="800" height="200"></canvas>
+                        <div id="lbl-latihan-pos" style="color: var(--accent); font-weight: 700; margin-top: 10px;">📍 Posisi Garis Bilangan: 0</div>
+                    </div>
+
+                    <div class="controls-grid">
+                        <button class="btn btn-danger" onclick="langkahLatihan(-1)">⬅️ Kiri (-1)</button>
+                        <button class="btn btn-success" onclick="langkahLatihan(1)">➡️ Kanan (+1)</button>
+                        <button class="btn btn-panel" onclick="resetLatihan()">🔄 Reset</button>
+                        <button class="btn btn-accent" onclick="cekJawabanLatihan()">🎯 Cek Jawaban</button>
+                    </div>
+
+                    <div id="box-pembahasan-latihan" style="display: none; background: var(--panel-bg); padding: 16px; border-radius: 12px; margin-top: 16px;">
+                        <h4 id="lbl-latihan-status-txt"></h4>
+                        <div id="lbl-latihan-penjelasan" style="margin-top: 8px; font-size: 0.9rem;"></div>
+                        <button class="btn btn-primary" style="margin-top: 12px; width: 100%;" onclick="generateSoalLatihanBaru()">🎲 Soal HOTS Selanjutnya ➡️</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 5: HUB KUIS -->
+        <section id="tab-hub-kuis" class="view-section" style="display: none;">
+            <div class="lkm-section">
+                <h2>⚡ Lobi Kuis Evaluasi MathQuest</h2>
+                <p style="color: var(--text-muted); margin-top: 4px;">Pilih kategori kuis evaluasi yang ingin kamu selesaikan.</p>
+
+                <div class="dashboard-grid" style="margin-top: 20px;">
+                    <div class="dash-card">
+                        <div>
+                            <span style="font-size: 2.5rem;">⚡</span>
+                            <h3 style="margin-top: 10px; color: var(--accent);">Hitung-hitungan Biasa</h3>
+                            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">10 Soal Operasi Langsung</p>
+                        </div>
+                        <div>
+                            <p id="status-kuis-langsung" style="font-weight: 700; color: var(--accent); margin-bottom: 10px;">Status: Belum Selesai</p>
+                            <button class="btn btn-accent" id="btn-start-langsung" style="width: 100%;" onclick="mulaiKuisSpesifik('langsung')">Mulai Hitung Biasa 🎯</button>
+                        </div>
+                    </div>
+
+                    <div class="dash-card">
+                        <div>
+                            <span style="font-size: 2.5rem;">🌍</span>
+                            <h3 style="margin-top: 10px; color: var(--accent);">Soal Cerita Kontekstual</h3>
+                            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">10 Soal Aplikasi Real-World</p>
+                        </div>
+                        <div>
+                            <p id="status-kuis-kontekstual" style="font-weight: 700; color: var(--accent); margin-bottom: 10px;">Status: Belum Selesai</p>
+                            <button class="btn btn-primary" id="btn-start-kontekstual" style="width: 100%;" onclick="mulaiKuisSpesifik('kontekstual')">Mulai Soal Cerita 🚀</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 6: ARENA KUIS UTAMA -->
+        <section id="tab-kuis" class="view-section" style="display: none;">
+            <div class="lkm-section" id="quiz-body">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+                    <span class="status-badge progress" id="lbl-mode">Kuis Langsung</span>
+                    <div style="background: var(--danger); color: #fff; padding: 6px 16px; border-radius: 20px; font-weight: 700;" id="lbl-timer">⏱️ 60:00</div>
+                    <div style="font-weight: 700; color: var(--accent);" id="lbl-progress">Soal: 1 / 10</div>
+                </div>
+
+                <div id="lbl-soal" style="font-size: 1.2rem; font-weight: 700; text-align: center; margin: 24px 0;">Memuat Soal...</div>
+
+                <div class="form-group" style="max-width: 250px; margin: 0 auto 16px auto;">
+                    <label style="text-align: center; display: block;">Jawaban Angka Kamu:</label>
+                    <input type="number" id="input-angka-kuis" class="form-control" placeholder="Contoh: -2" style="font-weight: 700; text-align: center;">
+                </div>
+
+                <div class="canvas-container">
+                    <canvas id="canvasGaris" width="800" height="300"></canvas>
+                    <div id="lbl-posisi" style="color: var(--accent); font-weight: 700; margin-top: 10px;">📍 Posisi Garis Bilangan: 0</div>
+                </div>
+
+                <div id="panel-feedback-kuis" style="background: var(--panel-bg); padding: 14px; border-radius: 12px; margin-top: 12px; display: flex; align-items: center; gap: 12px;">
+                    <span id="lbl-emoji" style="font-size: 2rem;">🙂</span>
+                    <span id="lbl-pesan" style="font-size: 0.9rem;">Masukkan jawaban angka & tentukan garis bilangan!</span>
+                </div>
+
+                <div class="controls-grid" id="panel-kontrol"></div>
+            </div>
+
+            <div id="quiz-result" class="lkm-section" style="display: none; text-align: center;">
+                <h2>🎉 Kuis Selesai! Nilai Sesi Ini:</h2>
+                <div style="font-size: 3.5rem; font-weight: 800; color: var(--accent); margin: 16px 0;" id="final-score">0 / 100</div>
+                <button class="btn btn-accent" onclick="switchTab('hub-kuis')">🏠 Kembali ke Menu Kuis</button>
+            </div>
+        </section>
+
+        <!-- VIEW 7: REKAP GURU (DASHBOARD GURU) -->
+        <section id="tab-rekap" class="view-section" style="display: none;">
+            <div class="lkm-section">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                    <h2>📊 Rekapitulasi Nilai & Aktivitas Siswa (Khusus Guru)</h2>
+                    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button class="btn btn-success" onclick="unduhRekapCSV()">📥 Unduh File CSV</button>
+                        <button class="btn btn-danger" onclick="hapusSeluruhRekap()">🗑 Hapus Rekap Nilai</button>
+                    </div>
+                </div>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 6px;">Hasil LKM diambil dari Google Sheets agar guru dapat melihat pengumpulan siswa lintas perangkat. Rekap nilai kuis lama masih disimpan lokal pada browser ini.</p>
+                <br>
+                <div style="overflow-x: auto;">
+                    <table class="rekap-table">
+                        <thead>
+                            <tr>
+                                <th>No. Absen</th>
+                                <th>Nama Siswa</th>
+                                <th>Status LKM</th>
+                                <th>Hitung Biasa</th>
+                                <th>Soal Cerita</th>
+                                <th>Nilai Rata-Rata</th>
+                                <th>Waktu Pembaruan</th>
+                                <th>Hasil LKM</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabel-rekap-body">
+                            <tr><td colspan="8">Belum ada data nilai tersimpan.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+    </main>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

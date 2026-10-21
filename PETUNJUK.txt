@@ -1,0 +1,25 @@
+MATHQUEST + GOOGLE SHEETS (GitHub Pages)
+
+ISI PAKET
+- index.html
+- style.css
+- script.js
+- Code.gs (backend Google Apps Script)
+
+SETUP
+1. Buka Google Sheets yang akan digunakan. Salin Spreadsheet ID dari URL: https://docs.google.com/spreadsheets/d/SPREADSHEET_ID/edit
+2. Buka https://script.google.com, buat project baru, lalu ganti isi Code.gs dengan file Code.gs di paket ini.
+3. Ubah SPREADSHEET_ID di Code.gs menjadi ID spreadsheet. Ubah GURU_PIN menjadi PIN guru yang kuat dan ingat PIN tersebut.
+4. Deploy > New deployment > pilih Web app. Execute as: Me. Who has access: Anyone. Tekan Deploy dan izinkan akses yang diminta.
+5. Salin URL deployment yang berakhir /exec.
+6. Buka script.js dan ganti TEMPEL_URL_WEB_APP_APPS_SCRIPT_DI_SINI dengan URL /exec tersebut. Jangan tambahkan tanda kutip tambahan; pertahankan tanda kutip yang sudah ada.
+7. Upload index.html, style.css, script.js ke repositori GitHub Pages. Pastikan ketiganya berada pada folder yang sama. Code.gs tidak perlu diunggah ke GitHub Pages; ia berada di Google Apps Script.
+8. Tes dari dua perangkat/browser berbeda: siswa login, isi LKM, tekan Kumpulkan LKM; guru buka Rekap Guru, masukkan PIN yang sama dengan GURU_PIN, lalu unduh PDF.
+9. Jika mengubah kode Apps Script setelah deploy, buka Deploy > Manage deployments > Edit > New version > Deploy.
+
+CATATAN PENTING
+- PIN guru divalidasi oleh Apps Script, bukan hanya browser. Tetap gunakan PIN yang tidak mudah ditebak.
+- Karena endpoint menerima pengumpulan publik, jangan gunakan spreadsheet ini untuk data sensitif. Script menerima data LKM dari siapa pun yang mengakses website.
+- Jawaban LKM dan tombol PDF lintas perangkat menggunakan Google Sheets. Nilai kuis yang lama masih memakai localStorage dan belum disinkronkan lintas perangkat.
+- GitHub Pages harus menyajikan website melalui HTTPS. URL Apps Script harus URL deployment /exec, bukan URL editor /dev.
+- Tombol PDF membuka dialog cetak browser; pilih Save as PDF / Simpan sebagai PDF.
