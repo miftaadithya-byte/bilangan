@@ -8,6 +8,11 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Pustaka PDF Generator (jsPDF + AutoTable) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+    
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -19,7 +24,7 @@
         <h2>Selamat Datang!</h2>
         <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px;">Masukkan identitasmu untuk mengakses MathQuest SMP</p>
         
-        <form onsubmit="simpanIdentitas(event)">
+        <form onsubmit="simpanIdentitas(event); return false;">
             <div class="form-group">
                 <label for="txt-nama">Nama Lengkap Siswa:</label>
                 <input type="text" id="txt-nama" class="form-control" placeholder="Contoh: Budi Santoso" required>
@@ -83,11 +88,11 @@
             <span class="prereq-alert-icon">⚠️</span>
             <div>
                 <h4 style="color: var(--accent);">Status Prasyarat Kuis Evaluasi</h4>
-                <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">Selesaikan seluruh tahapan berikut untuk membuka akses Kuis Evaluasi:</p>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">Selesaikan tahapan berikut untuk membuka akses Kuis Evaluasi (LKM bersifat opsional):</p>
                 <div class="prereq-list">
                     <div>1. Login Identitas: <span id="st-login" class="status-badge complete">Selesai ✅</span></div>
                     <div>2. Pelajari Modul Materi: <span id="st-materi" class="status-badge pending">Belum ❌</span></div>
-                    <div>3. Selesaikan & Kumpulkan LKM Digital: <span id="st-lkm" class="status-badge pending">Belum ❌</span></div>
+                    <div>3. LKM Digital (Opsional): <span id="st-lkm" class="status-badge progress">Opsional 💡</span></div>
                     <div>4. Latihan HOTS (Min. 1 Soal Benar): <span id="st-latihan" class="status-badge pending">Belum ❌</span></div>
                 </div>
             </div>
@@ -120,7 +125,7 @@
                         <span class="dash-icon">📝</span>
                     </div>
                     <div>
-                        <span id="dash-lkm-status" class="status-badge pending">Belum Dikerjakan</span>
+                        <span id="dash-lkm-status" class="status-badge progress">Opsional</span>
                         <button class="btn btn-panel" style="width: 100%; margin-top: 12px;" onclick="switchTab('lkm')">Isi LKM Digital ➡️</button>
                     </div>
                 </div>
@@ -192,7 +197,7 @@
             <div class="lkm-section">
                 <div class="lkm-header">
                     <h2>📝 Lembar Kerja Peserta Didik (LKM Digital)</h2>
-                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">Isi seluruh kegiatan di bawah ini. Sesuai aturan, LKM ini bertujuan untuk belajar dan menemukan konsep—jawaban boleh salah, tetapi wajib dikerjakan dan dikumpulkan untuk melanjutkan ke kuis.</p>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 4px;">Isi seluruh kegiatan di bawah ini. LKM ini bersifat opsional dan tidak menghalangi kamu untuk mengerjakan kuis.</p>
                 </div>
 
                 <!-- KEGIATAN 1 -->
@@ -308,7 +313,7 @@
                     </div>
 
                     <div class="rubrik-box">
-                        📌 <strong>Ketentuan LKM:</strong> Jawaban Anda boleh benar atau salah. Selama seluruh isian di atas telah terisi dengan niat menjawab, LKM dapat dikumpulkan dan guru dapat meninjau rekapitulasi jawaban Anda.
+                        📌 <strong>Ketentuan LKM:</strong> Bersifat opsional untuk kelancaran kuis evaluasi.
                     </div>
                 </div>
 
@@ -436,7 +441,7 @@
                         <button class="btn btn-danger" onclick="hapusSeluruhRekap()">🗑 Hapus Rekap Nilai</button>
                     </div>
                 </div>
-                <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 6px;">Hasil LKM diambil dari Google Sheets agar guru dapat melihat pengumpulan siswa lintas perangkat. Rekap nilai kuis lama masih disimpan lokal pada browser ini.</p>
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 6px;">Hasil LKM diambil dari Google Sheets/Lokal agar guru dapat melihat pengumpulan siswa. Rekap nilai kuis disimpan secara lokal pada browser.</p>
                 <br>
                 <div style="overflow-x: auto;">
                     <table class="rekap-table">
